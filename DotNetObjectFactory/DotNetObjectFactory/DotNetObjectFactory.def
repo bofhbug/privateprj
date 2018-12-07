@@ -1,0 +1,7 @@
+; DotNetObjectFactory.def : Declares the module parameters.
+
+LIBRARY
+
+EXPORTS
+	CreateComObject PRIVATE
+	CreateDotNetObject PRIVATE
