@@ -28,35 +28,50 @@ namespace LaunchEnvironment.Config
             {
                 return "";
             }
-            string expandedValue = Environment.ExpandEnvironmentVariables(path);
 
-            if (expandedValue.IndexOf("..\\") == -1 && 
-                expandedValue.IndexOf(@".\\") == -1 && 
-                expandedValue.IndexOf("../") == -1 &&
-                expandedValue.IndexOf(@"./") == -1 &&
-                expandedValue.IndexOf(@".") != 0 &&
-                expandedValue.IndexOf(@"..") != 0)
+            try
             {
-                if (Directory.Exists(expandedValue))
-                {
-                    return expandedValue;
-                }
-                if (File.Exists(expandedValue))
-                {
-                    return expandedValue;
-                }
-            }
 
-            string relativePath = Path.GetFullPath(Path.Combine(WorkingDir, expandedValue));
-            if (Directory.Exists(relativePath))
-            {
-                return relativePath;
+                string expandedValue = Environment.ExpandEnvironmentVariables(path);
+
+                if (expandedValue.IndexOf("..\\") == -1 &&
+                    expandedValue.IndexOf(@".\\") == -1 &&
+                    expandedValue.IndexOf("../") == -1 &&
+                    expandedValue.IndexOf(@"./") == -1 &&
+                    expandedValue.IndexOf(@".") != 0 &&
+                    expandedValue.IndexOf(@"..") != 0)
+                {
+                    if (Directory.Exists(expandedValue))
+                    {
+                        return expandedValue;
+                    }
+                    if (File.Exists(expandedValue))
+                    {
+                        return expandedValue;
+                    }
+                }
+
+                try
+                {
+                    string relativePath = Path.GetFullPath(Path.Combine(WorkingDir, expandedValue));
+                    if (Directory.Exists(relativePath))
+                    {
+                        return relativePath;
+                    }
+                    if (File.Exists(relativePath))
+                    {
+                        return relativePath;
+                    }
+                }
+                catch (Exception)
+                { }
+
+                return expandedValue;
             }
-            if (File.Exists(relativePath))
+            catch(Exception)
             {
-                return relativePath;
             }
-            return expandedValue;
+            return path;
         }
         public string ResolveEnvironmentValue(in EnvironmentValueType type, in string newValue)
         {
