@@ -347,4 +347,4 @@ bin-ppc/
 *.LOG2
 *.blf
 *.regtrans-ms
-
+.vscode/
